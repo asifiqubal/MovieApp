@@ -13,7 +13,7 @@ const rdx_reduers = combineReducers({
 const persist_cfg = {
   key: 'root',
   storage: AsyncStorage,
-  whitelist: ['__genre'],
+  whitelist: [],
 };
 
 /**

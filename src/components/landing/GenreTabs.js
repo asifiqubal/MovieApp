@@ -5,76 +5,90 @@ import {
   View,
   Animated,
   Dimensions,
+  FlatList,
+  TouchableOpacity,
 } from 'react-native';
 import React, {forwardRef, useEffect, useRef, useState} from 'react';
 
 const {width} = Dimensions.get('screen');
 
-export default function GenreTabs({data, scrollX}) {
-  const containerRef = useRef();
+const GenreTabs = ({data, activeTab, onSelect}) => {
+  const tabRef = useRef();
+  const tabContainerRef = useRef();
   const [tabWidths, SetTabWidths] = useState([]);
   useEffect(() => {
-    let m = [];
-    data.forEach(item => {
-      item?.ref?.current?.measureLayout(
-        containerRef.current,
-        (x, y, width, height) => {
-          console.log(width);
-          m.push({x, y, width, height});
-          if (m.length === data.length) {
-            SetTabWidths(m);
-          }
-        },
-      );
-    });
-  }, []);
-  console.log('mList', tabWidths);
+    if (data.length) {
+      let m = [];
+      data.forEach(item => {
+        console.log(item.ref, tabContainerRef);
+        item?.ref?.current?.measureLayout(
+          tabContainerRef.current,
+          (x, y, width, height) => {
+            m.push({x, y, width, height});
+            if (m.length === data.length) {
+              SetTabWidths(m);
+            }
+          },
+        );
+      });
+    }
+  }, [data]);
+  //   console.log('mList', tabWidths, data);
+
+  useEffect(() => {
+    console.log('active', tabWidths[activeTab], width);
+
+    if (
+      tabWidths?.length > 0 &&
+      tabWidths[activeTab]?.x + tabWidths[activeTab]?.width >= width
+    ) {
+      tabContainerRef?.current?.scrollTo({
+        x: tabWidths[activeTab]?.x + tabWidths[activeTab]?.width - width,
+        animated: true,
+      });
+    } else {
+      tabContainerRef?.current?.scrollTo({
+        x: 0,
+        animated: true,
+      });
+    }
+  }, [activeTab]);
 
   return (
     <View>
       <ScrollView
-        style={{flexDirection: 'row', height: 60}}
         horizontal
-        ref={containerRef}
-        showsHorizontalScrollIndicator={false}>
-        {data.map(val => {
-          return <Tab key={val.id} item={val} ref={val.ref} />;
+        showsHorizontalScrollIndicator={false}
+        ref={tabContainerRef}>
+        {data.map((val, index) => {
+          return (
+            <Tab
+              key={val.id}
+              item={val}
+              ref={val.ref}
+              isActive={index === activeTab}
+              onPress={() => onSelect(index)}
+            />
+          );
         })}
       </ScrollView>
-      {tabWidths?.length > 0 && (
-        <Indigator tabWidths={tabWidths} scrollX={scrollX} />
-      )}
     </View>
   );
-}
+};
+
+export default GenreTabs;
 
 const styles = StyleSheet.create({});
 
-const Tab = forwardRef(({item}, ref) => {
+const Tab = forwardRef(({item, isActive, onPress}, tabRef) => {
   return (
-    <View style={{padding: 4, margin: 4}} ref={ref}>
-      <Text style={{fontSize: 18}}>{item.name}</Text>
-    </View>
+    <TouchableOpacity
+      style={{padding: 4, margin: 4}}
+      onPress={onPress}
+      ref={tabRef}>
+      <Text style={{fontSize: 18, color: isActive ? 'green' : '#fff'}}>
+        {item.name}
+      </Text>
+    </TouchableOpacity>
   );
 });
-
-const Indigator = ({tabWidths, scrollX}) => {
-  const indigatorWidth = scrollX.interpolate({
-    inputRange: tabWidths.map((_, i) => i * width),
-    outputRange: tabWidths.map(data => data.width),
-  });
-  const translateX = scrollX.interpolate({
-    inputRange: tabWidths.map((_, i) => i * width),
-    outputRange: tabWidths.map(data => data.x),
-  });
-  return (
-    <Animated.View
-      style={{
-        height: 3,
-        width: indigatorWidth,
-        backgroundColor: '#fff',
-        transform: [{translateX}],
-      }}
-    />
-  );
-};
