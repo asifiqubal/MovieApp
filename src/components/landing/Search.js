@@ -5,14 +5,24 @@ import FAIcon from 'react-native-vector-icons/FontAwesome';
 
 const Search = ({searchText, OnChangeText}) => {
   return (
-    <View style={styles.searchContainer}>
-      <FAIcon name="search" size={24} />
-      <TextInput
-        placeholder="Search"
-        value={searchText}
-        onChangeText={OnChangeText}
-        style={styles.searchInput}
-      />
+    <View>
+      <View style={styles.searchContainer}>
+        <FAIcon name="search" size={24} />
+        <TextInput
+          placeholder="Search"
+          value={searchText}
+          onChangeText={val => OnChangeText(val.trim())}
+          style={styles.searchInput}
+        />
+        {searchText?.length > 0 && (
+          <FAIcon
+            name="close"
+            size={24}
+            style={{marginRight: 6}}
+            onPress={() => OnChangeText('')}
+          />
+        )}
+      </View>
     </View>
   );
 };

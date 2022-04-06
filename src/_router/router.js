@@ -2,7 +2,7 @@ import React from 'react';
 import {LogBox} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator, TransitionPresets} from '@react-navigation/stack';
-import {Screen_Discover} from './screen';
+import {Screen_Details, Screen_Discover} from './screen';
 
 const Stack = createStackNavigator();
 
@@ -18,6 +18,7 @@ const StackApp = () => {
         ...TransitionPresets.SlideFromRightIOS,
       })}>
       <Stack.Screen name="Discover" component={Screen_Discover} />
+      <Stack.Screen name="Details" component={Screen_Details} />
     </Stack.Navigator>
   );
 };

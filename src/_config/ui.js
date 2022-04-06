@@ -8,6 +8,7 @@ export default {
     black: '#000000',
     white: '#FFFFFF',
     error: '#FF2D2D',
+    border: 'rgba(255,255,255,.5)',
   },
   text: {
     primary: '#FFFFFF',

@@ -2,10 +2,12 @@ import {combineReducers} from 'redux';
 import {persistReducer} from 'redux-persist';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Genre from './Genre';
+import Discover from './Discover';
 /**
  */
 const rdx_reduers = combineReducers({
   __genre: Genre,
+  __discover: Discover,
 });
 
 /**

@@ -13,11 +13,11 @@ export const GetMovieGenres = () => {
         throw new Error(resp?.status_message || 'Genres Not Found!!!');
       }
       d(RDXUpdateMovieGenres(PreepGenres(resp.genres)));
-      const refList = resp.genres.map(val => ({
-        ...val,
-        ref: React.createRef(),
-      }));
-      d(RDXUpdateMovieGenresList(refList));
+      // const refList = resp.genres.map(val => ({
+      //   ...val,
+      //   ref: React.createRef(),
+      // }));
+      // d(RDXUpdateMovieGenresList(refList));
 
       return {success: true};
     } catch (error) {
@@ -37,7 +37,12 @@ export const GetTvGenres = () => {
         method: 'genre/tv/list',
       };
       const resp = await Get(param);
-      console.log(resp);
+      // console.log(resp);
+      if (!resp.genres) {
+        throw new Error(resp?.status_message || 'Genres Not Found!!!');
+      }
+      d(RDXUpdateTvGenres(PreepGenres(resp.genres)));
+      return {success: true};
     } catch (error) {
       console.warn('action/genres: GetMovieGenres: error:', error);
     }
@@ -80,6 +85,13 @@ const RDXUpdateMovieGenresList = payload => {
 const RDXUpdateMovieGenres = payload => {
   return {
     type: 'genre:update-movie',
+    payload,
+  };
+};
+
+const RDXUpdateTvGenres = payload => {
+  return {
+    type: 'genre:update-tv',
     payload,
   };
 };

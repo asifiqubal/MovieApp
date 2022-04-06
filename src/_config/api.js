@@ -1,7 +1,7 @@
 export const api = {
   base_url: 'https://api.themoviedb.org/3/',
   apiKey: 'cd890f94a756b1518a2a17617a5b430e',
-  img_url: 'https://image.tmdb.org/t/p/w500/',
+  img_url: 'https://image.tmdb.org/t/p/w500',
   imdb_url: 'https://www.imdb.com/title/',
 };
 
