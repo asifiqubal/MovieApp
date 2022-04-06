@@ -6,8 +6,8 @@ import MaskedView from '@react-native-masked-view/masked-view';
 export const GradientView = props => {
   return (
     <LinearGradient
-      locations={[0, 0.25, 0.5, 1]}
-      colors={['#667EEA', '#658DF0', '#659BF5', '#64B6FF']}
+      locations={[0, 1]}
+      colors={['#FF5F6D', '#FFC371']}
       style={{flex: 1, width: '100%', borderRadius: 6}}
       start={{x: 0, y: 1}}
       end={{x: 1, y: 1}}>
@@ -19,8 +19,8 @@ export const GradientText = props => {
   return (
     <MaskedView maskElement={<Text {...props} />}>
       <LinearGradient
-        locations={[0, 0.25, 0.5, 1]}
-        colors={['#667EEA', '#658DF0', '#659BF5', '#64B6FF']}
+        locations={[0, 1]}
+        colors={['#FF5F6D', '#FFC371']}
         start={{x: 0, y: 1}}
         end={{x: 1, y: 1}}>
         <Text {...props} style={[props.style, {opacity: 0}]} />
@@ -32,8 +32,8 @@ export const GradientMaskView = props => {
   return (
     <MaskedView maskElement={<View {...props} />}>
       <LinearGradient
-        locations={[0, 0.25, 0.5, 1]}
-        colors={['#667EEA', '#658DF0', '#659BF5', '#64B6FF']}
+        locations={[0, 1]}
+        colors={['#FF5F6D', '#FFC371']}
         start={{x: 0, y: 1}}
         end={{x: 1, y: 1}}>
         <View {...props} style={[props.style, {opacity: 0}]} />

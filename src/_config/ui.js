@@ -7,6 +7,7 @@ export default {
     status_bar_black: '#000000',
     black: '#000000',
     white: '#FFFFFF',
+    white_light: '#999999',
     error: '#FF2D2D',
     border: 'rgba(255,255,255,.5)',
   },

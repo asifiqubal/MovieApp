@@ -7,9 +7,10 @@ const Search = ({searchText, OnChangeText}) => {
   return (
     <View>
       <View style={styles.searchContainer}>
-        <FAIcon name="search" size={24} />
+        <FAIcon name="search" size={24} color={ui.color.white_light} />
         <TextInput
           placeholder="Search"
+          placeholderTextColor={ui.text.light}
           value={searchText}
           onChangeText={val => OnChangeText(val.trim())}
           style={styles.searchInput}
@@ -48,5 +49,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 4,
     flex: 1,
+    color: ui.text.white,
   },
 });

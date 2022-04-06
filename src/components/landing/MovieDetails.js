@@ -122,7 +122,9 @@ const MovieDetails = ({navigation, route}) => {
                 size={26}
                 color={ui.color.white}
               />
-              <Text style={{fontSize: 16}}>{details?.runtime} minutes</Text>
+              <Text style={{fontSize: 16, color: ui.text.light}}>
+                {details?.runtime} minutes
+              </Text>
             </View>
           ) : (
             <View style={styles.runtimeContainer}>
@@ -131,14 +133,14 @@ const MovieDetails = ({navigation, route}) => {
                 size={26}
                 color={ui.color.white}
               />
-              <Text style={{fontSize: 16}}>
+              <Text style={{fontSize: 16, color: ui.text.light}}>
                 Total Season {details?.number_of_seasons}
               </Text>
             </View>
           )}
           <View style={styles.rating}>
             <MCIcon name="star" size={26} color={ui.color.white} />
-            <Text style={{fontSize: 16, marginLeft: 4}}>
+            <Text style={{fontSize: 16, marginLeft: 4, color: ui.text.light}}>
               {details?.vote_average} (TMDb)
             </Text>
           </View>
@@ -148,7 +150,7 @@ const MovieDetails = ({navigation, route}) => {
             <Text style={styles.subTitle}>
               {isMovie ? 'Release Date' : 'First Release'}
             </Text>
-            <Text>
+            <Text style={{color: ui.text.light}}>
               {Time.FullMDY(
                 isMovie ? details?.release_date : details?.first_air_date,
               )}
@@ -171,7 +173,7 @@ const MovieDetails = ({navigation, route}) => {
         </View>
         <View style={{padding: 8, marginHorizontal: 8}}>
           <Text style={styles.subTitle}>Synopsis</Text>
-          <Text>{item.overview}</Text>
+          <Text style={{color: ui.text.light}}>{item.overview}</Text>
         </View>
         <View style={{padding: 8, marginHorizontal: 8}}>
           <Text style={[styles.subTitle, {marginBottom: 4}]}>

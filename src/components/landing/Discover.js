@@ -65,9 +65,18 @@ const Discover = props => {
         <View style={styles.searchResult}>
           <FlatList
             data={searchResult}
+            keyboardShouldPersistTaps="always"
             keyExtractor={val => 'search-' + val.id}
             renderItem={({item}) => (
-              <SearchItem item={item} navigation={props.navigation} />
+              <SearchItem
+                item={item}
+                onSelect={() => {
+                  SetSearchText('');
+                  props.navigation.navigate('Details', {
+                    item: {...item, type: item.media_type},
+                  });
+                }}
+              />
             )}
           />
         </View>
@@ -178,7 +187,7 @@ const Footer = () => {
   return (
     <View style={styles.footer}>
       <TouchableOpacity style={styles.footerButton}>
-        <MCIcon name="home" size={28} />
+        <MCIcon name="home" size={28} color={ui.color.white_light} />
       </TouchableOpacity>
       <TouchableOpacity style={styles.footerButton}>
         <GradientMaskView style={{fontSize: 22, color: '#fff'}}>
@@ -186,23 +195,17 @@ const Footer = () => {
         </GradientMaskView>
       </TouchableOpacity>
       <TouchableOpacity style={styles.footerButton}>
-        <FAIcon name="user" size={28} />
+        <FAIcon name="user" size={28} color={ui.color.white_light} />
       </TouchableOpacity>
     </View>
   );
 };
 
-const SearchItem = ({item, navigation}) => {
+const SearchItem = ({item, onSelect}) => {
   return (
     <View>
       {item.media_type === 'movie' && (
-        <TouchableOpacity
-          style={styles.itemContainer}
-          onPress={() =>
-            navigation.navigate('Details', {
-              item: {...item, type: item.media_type},
-            })
-          }>
+        <TouchableOpacity style={styles.itemContainer} onPress={onSelect}>
           <Image
             source={{
               uri: [api.img_url, item.poster_path].join(''),
@@ -217,13 +220,7 @@ const SearchItem = ({item, navigation}) => {
         </TouchableOpacity>
       )}
       {item.media_type === 'tv' && (
-        <TouchableOpacity
-          style={styles.itemContainer}
-          onPress={() =>
-            navigation.navigate('Details', {
-              item: {...item, type: item.media_type},
-            })
-          }>
+        <TouchableOpacity style={styles.itemContainer} onPress={onSelect}>
           <Image
             source={{
               uri: [api.img_url, item.poster_path].join(''),
