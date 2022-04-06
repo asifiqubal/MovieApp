@@ -14,7 +14,7 @@ const StackApp = () => {
       initialRouteName="Discover"
       screenOptions={({route, navigation}) => ({
         headerShown: false,
-        gestureEnabled: true,
+        gestureEnabled: false,
         ...TransitionPresets.SlideFromRightIOS,
       })}>
       <Stack.Screen name="Discover" component={Screen_Discover} />

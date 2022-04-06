@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
     // height: 250,
     width: '90%',
     alignSelf: 'center',
-    // backgroundColor: 'red',
+    backgroundColor: ui.color.background,
     position: 'absolute',
     top: 66,
     zIndex: 3,
