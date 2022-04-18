@@ -24,6 +24,7 @@ import {api} from '../../_config/api';
 const {width} = Dimensions.get('screen');
 
 const Discover = props => {
+  const scrollX = useRef(new Animated.Value(0)).current;
   const dispatch = useDispatch();
   const {tabList} = useSelector(state => state.__discover);
   const tabRef = useRef();
@@ -100,8 +101,9 @@ const Discover = props => {
         tabRef={tabRef}
         activeTab={activeTab}
         onSelect={UpdateGenre}
+        scrollX={scrollX}
       />
-      <FlatList
+      <Animated.FlatList
         ref={movieRef}
         data={tabList}
         horizontal
@@ -110,6 +112,10 @@ const Discover = props => {
         keyExtractor={val => val.id}
         renderItem={({item}) => (
           <MovieList item={item} navigation={props.navigation} />
+        )}
+        onScroll={Animated.event(
+          [{nativeEvent: {contentOffset: {x: scrollX}}}],
+          {useNativeDriver: false},
         )}
         onMomentumScrollEnd={event => {
           // console.log(Math.c(event.nativeEvent.contentOffset.x / width));

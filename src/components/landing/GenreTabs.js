@@ -8,12 +8,19 @@ import {
   FlatList,
   TouchableOpacity,
 } from 'react-native';
-import React, {forwardRef, useEffect, useRef, useState} from 'react';
+import React, {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import {GradientText, GradientView} from '../_common/Gradient';
 
 const {width} = Dimensions.get('screen');
 
-const GenreTabs = ({data, activeTab, onSelect}) => {
+const GenreTabs = ({data, activeTab, onSelect, scrollX}) => {
   const tabRef = useRef();
   const tabContainerRef = useRef();
   const [tabWidths, SetTabWidths] = useState([]);
@@ -34,17 +41,22 @@ const GenreTabs = ({data, activeTab, onSelect}) => {
       });
     }
   }, [data]);
-  //   console.log('mList', tabWidths, data);
+  // console.log('mList', tabWidths, data);
 
   useEffect(() => {
-    // console.log('active', tabWidths[activeTab], width);
+    console.log(
+      'active',
+      tabWidths[activeTab],
+      width,
+      tabWidths[activeTab]?.x + tabWidths[activeTab]?.width - width,
+    );
 
     if (
       tabWidths?.length > 0 &&
       tabWidths[activeTab]?.x + tabWidths[activeTab]?.width >= width
     ) {
       tabContainerRef?.current?.scrollTo({
-        x: tabWidths[activeTab]?.x + tabWidths[activeTab]?.width - width,
+        x: tabWidths[activeTab]?.x + tabWidths[activeTab]?.width + 50 - width,
         animated: true,
       });
     } else {
@@ -55,12 +67,22 @@ const GenreTabs = ({data, activeTab, onSelect}) => {
     }
   }, [activeTab]);
 
+  const SelectedView = useMemo(() => {
+    console.log('Tab should', tabWidths);
+    return;
+  }, [tabWidths, scrollX, data]);
+
+  // console.log('SelectedView', Indigator);
+
   return (
     <View style={{paddingHorizontal: 16, paddingVertical: 8, margin: 4}}>
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
+        style={{backgroundColor: 'red'}}
         ref={tabContainerRef}>
+        {/* <View style={{height: 2, width: 50, backgroundColor: 'red'}} /> */}
+        <Indigator tabWidths={tabWidths} scrollX={scrollX} />
         {data.map((val, index) => {
           return (
             <Tab
@@ -101,3 +123,31 @@ const Tab = forwardRef(({item, isActive, onPress}, tabRef) => {
     </View>
   );
 });
+
+const Indigator = ({tabWidths, scrollX}) => {
+  if (!tabWidths.length > 0) {
+    return null;
+  }
+
+  const indigatorWidth = scrollX.interpolate({
+    inputRange: tabWidths.map((_, i) => i * width),
+    outputRange: tabWidths.map(data => data.width),
+  });
+  const translateX = scrollX.interpolate({
+    inputRange: tabWidths.map((_, i) => i * width),
+    outputRange: tabWidths.map(data => data.x),
+  });
+  console.log('Render Ind');
+  return (
+    <Animated.View
+      style={{
+        height: 3,
+        width: indigatorWidth,
+        backgroundColor: '#fff',
+        position: 'absolute',
+        bottom: 0,
+        transform: [{translateX}],
+      }}
+    />
+  );
+};
