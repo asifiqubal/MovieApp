@@ -68,21 +68,26 @@ const GenreTabs = ({data, activeTab, onSelect, scrollX}) => {
   }, [activeTab]);
 
   const SelectedView = useMemo(() => {
-    console.log('Tab should', tabWidths);
-    return;
+    if (tabWidths?.length < 1) {
+      console.log('test');
+      return null;
+    }
+    console.log('test pass');
+
+    return <Indigator tabWidths={tabWidths} scrollX={scrollX} />;
   }, [tabWidths, scrollX, data]);
 
-  // console.log('SelectedView', Indigator);
+  console.log('SelectedView', Indigator);
 
   return (
     <View style={{paddingHorizontal: 16, paddingVertical: 8, margin: 4}}>
+      {SelectedView}
+      <Indigator tabWidths={tabWidths} scrollX={scrollX} />
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
         style={{backgroundColor: 'red'}}
         ref={tabContainerRef}>
-        {/* <View style={{height: 2, width: 50, backgroundColor: 'red'}} /> */}
-        <Indigator tabWidths={tabWidths} scrollX={scrollX} />
         {data.map((val, index) => {
           return (
             <Tab
@@ -95,6 +100,9 @@ const GenreTabs = ({data, activeTab, onSelect, scrollX}) => {
           );
         })}
       </ScrollView>
+      {tabWidths?.length > 0 && (
+        <Indigator tabWidths={tabWidths} scrollX={scrollX} />
+      )}
     </View>
   );
 };
@@ -125,25 +133,23 @@ const Tab = forwardRef(({item, isActive, onPress}, tabRef) => {
 });
 
 const Indigator = ({tabWidths, scrollX}) => {
-  if (!tabWidths.length > 0) {
-    return null;
-  }
-
+  const inputRange =
+    tabWidths?.length > 0 ? tabWidths.map((_, i) => i * width) : [0, 1];
   const indigatorWidth = scrollX.interpolate({
-    inputRange: tabWidths.map((_, i) => i * width),
-    outputRange: tabWidths.map(data => data.width),
+    inputRange,
+    outputRange:
+      tabWidths?.length > 0 ? tabWidths.map(data => data.width) : [0, width],
   });
   const translateX = scrollX.interpolate({
-    inputRange: tabWidths.map((_, i) => i * width),
-    outputRange: tabWidths.map(data => data.x),
+    inputRange,
+    outputRange: tabWidths?.length > 0 ? tabWidths.map(data => data.x) : [0, 0],
   });
-  console.log('Render Ind');
   return (
     <Animated.View
       style={{
         height: 3,
         width: indigatorWidth,
-        backgroundColor: '#fff',
+        backgroundColor: 'red',
         position: 'absolute',
         bottom: 0,
         transform: [{translateX}],

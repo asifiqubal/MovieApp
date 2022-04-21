@@ -21,6 +21,7 @@ import FAIcon from 'react-native-vector-icons/FontAwesome';
 import {GradientMaskView} from '../_common/Gradient';
 import {SearchMulti} from '../../redux/actions/Search';
 import {api} from '../../_config/api';
+import TabView from './TabView';
 const {width} = Dimensions.get('screen');
 
 const Discover = props => {
@@ -95,8 +96,8 @@ const Discover = props => {
         <Search searchText={searchText} OnChangeText={SetSearchText} />
         {SrcResView}
       </View>
-
-      <GenreTabs
+      {tabList?.length > 0 && <GenreTabs data={tabList} scrollX={scrollX} />}
+      <TabView
         data={tabList}
         tabRef={tabRef}
         activeTab={activeTab}
