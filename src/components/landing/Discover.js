@@ -96,8 +96,7 @@ const Discover = props => {
         <Search searchText={searchText} OnChangeText={SetSearchText} />
         {SrcResView}
       </View>
-      {tabList?.length > 0 && <GenreTabs data={tabList} scrollX={scrollX} />}
-      <TabView
+      <GenreTabs
         data={tabList}
         tabRef={tabRef}
         activeTab={activeTab}

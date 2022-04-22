@@ -10,7 +10,7 @@ const TabView = ({scrollX, data}) => {
     if (data.length) {
       let m = [];
       data.forEach(item => {
-        console.log(item.ref, tabContainerRef);
+        // console.log(item.ref, tabContainerRef);
         item?.ref?.current?.measureLayout(
           tabContainerRef.current,
           (x, y, width, height) => {

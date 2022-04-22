@@ -1,6 +1,5 @@
 import {
   StyleSheet,
-  ScrollView,
   Text,
   View,
   Animated,
@@ -17,6 +16,8 @@ import React, {
   useState,
 } from 'react';
 import {GradientText, GradientView} from '../_common/Gradient';
+import {ScrollView} from 'react-native-gesture-handler';
+// import {ScrollView} from 'react-native-gesture-handler';
 
 const {width} = Dimensions.get('screen');
 
@@ -32,61 +33,61 @@ const GenreTabs = ({data, activeTab, onSelect, scrollX}) => {
         item?.ref?.current?.measureLayout(
           tabContainerRef.current,
           (x, y, width, height) => {
+            console.log(x, width, y, height);
             m.push({x, y, width, height});
             if (m.length === data.length) {
               SetTabWidths(m);
             }
           },
+          err => console.log(err),
         );
       });
     }
   }, [data]);
-  // console.log('mList', tabWidths, data);
+  console.log('mList', tabWidths, data);
 
   useEffect(() => {
-    console.log(
-      'active',
-      tabWidths[activeTab],
-      width,
-      tabWidths[activeTab]?.x + tabWidths[activeTab]?.width - width,
-    );
-
-    if (
-      tabWidths?.length > 0 &&
-      tabWidths[activeTab]?.x + tabWidths[activeTab]?.width >= width
-    ) {
-      tabContainerRef?.current?.scrollTo({
-        x: tabWidths[activeTab]?.x + tabWidths[activeTab]?.width + 50 - width,
-        animated: true,
-      });
-    } else {
-      tabContainerRef?.current?.scrollTo({
-        x: 0,
-        animated: true,
-      });
-    }
+    // if (
+    //   tabWidths?.length > 0 &&
+    //   tabWidths[activeTab]?.x + tabWidths[activeTab]?.width >= width
+    // ) {
+    //   tabContainerRef?.current?.scrollTo({
+    //     x: tabWidths[activeTab]?.x + tabWidths[activeTab]?.width + 50 - width,
+    //     animated: true,
+    //   });
+    // } else {
+    //   tabContainerRef?.current?.scrollTo({
+    //     x: 0,
+    //     animated: true,
+    //   });
+    // }
   }, [activeTab]);
 
   const SelectedView = useMemo(() => {
-    if (tabWidths?.length < 1) {
-      console.log('test');
-      return null;
+    if (tabWidths?.length > 0) {
+      console.log('test pass');
+      return <Text>Hi</Text>;
     }
-    console.log('test pass');
-
-    return <Indigator tabWidths={tabWidths} scrollX={scrollX} />;
   }, [tabWidths, scrollX, data]);
 
-  console.log('SelectedView', Indigator);
+  console.log('SelectedView', SelectedView);
 
   return (
-    <View style={{paddingHorizontal: 16, paddingVertical: 8, margin: 4}}>
-      {SelectedView}
-      <Indigator tabWidths={tabWidths} scrollX={scrollX} />
+    <View
+      style={{
+        paddingHorizontal: 16,
+        paddingVertical: 8,
+        margin: 4,
+        backgroundColor: 'red',
+      }}
+      ref={tabRef}>
+      {tabWidths?.length > 0 && (
+        <Indigator scrollX={scrollX} tabWidths={tabWidths} />
+      )}
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
-        style={{backgroundColor: 'red'}}
+        // style={{}}
         ref={tabContainerRef}>
         {data.map((val, index) => {
           return (
@@ -99,10 +100,8 @@ const GenreTabs = ({data, activeTab, onSelect, scrollX}) => {
             />
           );
         })}
+        {SelectedView}
       </ScrollView>
-      {tabWidths?.length > 0 && (
-        <Indigator tabWidths={tabWidths} scrollX={scrollX} />
-      )}
     </View>
   );
 };
@@ -133,27 +132,26 @@ const Tab = forwardRef(({item, isActive, onPress}, tabRef) => {
 });
 
 const Indigator = ({tabWidths, scrollX}) => {
-  const inputRange =
-    tabWidths?.length > 0 ? tabWidths.map((_, i) => i * width) : [0, 1];
+  console.log(tabWidths);
+  const inputRange = tabWidths.map((_, i) => i);
   const indigatorWidth = scrollX.interpolate({
     inputRange,
-    outputRange:
-      tabWidths?.length > 0 ? tabWidths.map(data => data.width) : [0, width],
+    outputRange: tabWidths.map(data => data.width),
   });
   const translateX = scrollX.interpolate({
     inputRange,
-    outputRange: tabWidths?.length > 0 ? tabWidths.map(data => data.x) : [0, 0],
+    outputRange: tabWidths.map(data => data.x),
   });
+  console.log(translateX, indigatorWidth);
   return (
     <Animated.View
       style={{
         height: 3,
         width: indigatorWidth,
-        backgroundColor: 'red',
-        position: 'absolute',
-        bottom: 0,
+        backgroundColor: '#fff',
+        // position: 'absolute',
+        // bottom: 0,
         transform: [{translateX}],
-      }}
-    />
+      }}></Animated.View>
   );
 };
