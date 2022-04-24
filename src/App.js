@@ -10,7 +10,7 @@ import thunk from 'redux-thunk';
 
 import reducers from './redux/reducer';
 import AppNavigator from './_router/router';
-
+import 'react-native-reanimated';
 const rdx_store = createStore(reducers, applyMiddleware(thunk));
 const rdx_persistor = persistStore(rdx_store);
 

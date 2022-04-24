@@ -15,14 +15,18 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import {GradientText, GradientView} from '../_common/Gradient';
+import {
+  GradientView,
+  TestTextMaskView,
+  TransparentText,
+} from '../_common/Gradient';
 import {ScrollView} from 'react-native-gesture-handler';
+import {MotiView} from 'moti';
 // import {ScrollView} from 'react-native-gesture-handler';
 
 const {width} = Dimensions.get('screen');
 
 const GenreTabs = ({data, activeTab, onSelect, scrollX}) => {
-  const tabRef = useRef();
   const tabContainerRef = useRef();
   const [tabWidths, SetTabWidths] = useState([]);
   useEffect(() => {
@@ -47,30 +51,21 @@ const GenreTabs = ({data, activeTab, onSelect, scrollX}) => {
   console.log('mList', tabWidths, data);
 
   useEffect(() => {
-    // if (
-    //   tabWidths?.length > 0 &&
-    //   tabWidths[activeTab]?.x + tabWidths[activeTab]?.width >= width
-    // ) {
-    //   tabContainerRef?.current?.scrollTo({
-    //     x: tabWidths[activeTab]?.x + tabWidths[activeTab]?.width + 50 - width,
-    //     animated: true,
-    //   });
-    // } else {
-    //   tabContainerRef?.current?.scrollTo({
-    //     x: 0,
-    //     animated: true,
-    //   });
-    // }
-  }, [activeTab]);
-
-  const SelectedView = useMemo(() => {
-    if (tabWidths?.length > 0) {
-      console.log('test pass');
-      return <Text>Hi</Text>;
+    if (
+      tabWidths?.length > 0 &&
+      tabWidths[activeTab]?.x + tabWidths[activeTab]?.width >= width
+    ) {
+      tabContainerRef?.current?.scrollTo({
+        x: tabWidths[activeTab]?.x + tabWidths[activeTab]?.width + 50 - width,
+        animated: true,
+      });
+    } else {
+      tabContainerRef?.current?.scrollTo({
+        x: 0,
+        animated: true,
+      });
     }
-  }, [tabWidths, scrollX, data]);
-
-  console.log('SelectedView', SelectedView);
+  }, [activeTab]);
 
   return (
     <View
@@ -78,16 +73,12 @@ const GenreTabs = ({data, activeTab, onSelect, scrollX}) => {
         paddingHorizontal: 16,
         paddingVertical: 8,
         margin: 4,
-        backgroundColor: 'red',
-      }}
-      ref={tabRef}>
-      {tabWidths?.length > 0 && (
-        <Indigator scrollX={scrollX} tabWidths={tabWidths} />
-      )}
+      }}>
+      <TestTextMaskView text={'Hi'} />
+
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
-        // style={{}}
         ref={tabContainerRef}>
         {data.map((val, index) => {
           return (
@@ -97,10 +88,14 @@ const GenreTabs = ({data, activeTab, onSelect, scrollX}) => {
               ref={val.ref}
               isActive={index === activeTab}
               onPress={() => onSelect(index)}
+              tabWidths={tabWidths}
+              scrollX={scrollX}
             />
           );
         })}
-        {SelectedView}
+        {tabWidths?.length > 0 && (
+          <Indicator scrollX={scrollX} tabWidths={tabWidths} />
+        )}
       </ScrollView>
     </View>
   );
@@ -110,48 +105,54 @@ export default GenreTabs;
 
 const styles = StyleSheet.create({});
 
-const Tab = forwardRef(({item, isActive, onPress}, tabRef) => {
-  return (
-    <View ref={tabRef}>
-      {isActive ? (
-        <View style={{padding: 4, margin: 4}}>
-          <GradientText style={{fontSize: 22, color: '#fff'}}>
-            {item.name}
-          </GradientText>
-          <View style={{height: 3, width: '50%'}}>
-            <GradientView />
-          </View>
+const Tab = forwardRef(
+  ({item, isActive, onPress, tabWidths, scrollX}, tabRef) => {
+    return (
+      <View ref={tabRef} style={{padding: 4}}>
+        <View>
+          <MotiView
+            animate={{
+              backgroundColor: isActive ? 'rgba(0,0,0,0)' : '#fff',
+              opacity: isActive ? 0 : 1,
+            }}>
+            <TransparentText
+              style={{
+                fontSize: 20,
+                fontWeight: '600',
+              }}>
+              {item?.name}
+            </TransparentText>
+          </MotiView>
         </View>
-      ) : (
-        <TouchableOpacity style={{padding: 4, margin: 4}} onPress={onPress}>
-          <Text style={{fontSize: 20, color: '#fff'}}>{item.name}</Text>
-        </TouchableOpacity>
-      )}
-    </View>
-  );
-});
+      </View>
+    );
+  },
+);
 
-const Indigator = ({tabWidths, scrollX}) => {
+const Indicator = ({tabWidths, scrollX}) => {
   console.log(tabWidths);
-  const inputRange = tabWidths.map((_, i) => i);
-  const indigatorWidth = scrollX.interpolate({
+  const inputRange = tabWidths.map((_, i) => i * width);
+  const indicatorWidth = scrollX.interpolate({
     inputRange,
-    outputRange: tabWidths.map(data => data.width),
+    outputRange: tabWidths.map(data => data.width / 2),
   });
   const translateX = scrollX.interpolate({
     inputRange,
     outputRange: tabWidths.map(data => data.x),
   });
-  console.log(translateX, indigatorWidth);
+  console.log(translateX, indicatorWidth);
   return (
     <Animated.View
       style={{
         height: 3,
-        width: indigatorWidth,
-        backgroundColor: '#fff',
-        // position: 'absolute',
-        // bottom: 0,
+        width: indicatorWidth,
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        paddingLeft: 2,
         transform: [{translateX}],
-      }}></Animated.View>
+      }}>
+      <GradientView />
+    </Animated.View>
   );
 };

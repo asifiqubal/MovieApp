@@ -21,27 +21,39 @@ import FAIcon from 'react-native-vector-icons/FontAwesome';
 import {GradientMaskView} from '../_common/Gradient';
 import {SearchMulti} from '../../redux/actions/Search';
 import {api} from '../../_config/api';
-import TabView from './TabView';
 const {width} = Dimensions.get('screen');
 
 const Discover = props => {
   const scrollX = useRef(new Animated.Value(0)).current;
   const dispatch = useDispatch();
-  const {tabList} = useSelector(state => state.__discover);
+  // const {tabList} = useSelector(state => state.__discover);
   const tabRef = useRef();
   const movieRef = useRef();
   const [searchText, SetSearchText] = useState('');
   const [activeTab, setActiveTab] = useState(0);
   const [searchResult, UpdateResult] = useState([]);
-
+  const tabList = [
+    {
+      id: 'discover_movie_tab',
+      name: 'Movies',
+      url: 'discover/movie',
+      ref: React.useRef(),
+      type: 'movie',
+    },
+    {
+      id: 'discover_tv_tab',
+      name: 'Tv Series',
+      url: 'discover/tv',
+      ref: React.useRef(),
+      type: 'tv',
+    },
+  ];
   const Init = async () => {
     await dispatch(GetMovieGenres());
     // await dispatch(GetMovieListByGenre(12));
-    // console.log('gen', movie, movieList);
   };
 
   const UpdateGenre = index => {
-    // console.log(index);
     setActiveTab(index);
     movieRef?.current?.scrollToOffset({
       offset: index * width,
@@ -137,7 +149,7 @@ const styles = StyleSheet.create({
     margin: 4,
     paddingVertical: 4,
   },
-  headerTetx: {
+  headerText: {
     fontSize: 24,
     fontWeight: '600',
     color: ui.text.primary,
@@ -184,7 +196,7 @@ const styles = StyleSheet.create({
 const Header = ({text}) => {
   return (
     <View style={styles.header}>
-      <Text style={styles.headerTetx}>{text}</Text>
+      <Text style={styles.headerText}>{text}</Text>
     </View>
   );
 };
@@ -196,7 +208,7 @@ const Footer = () => {
         <MCIcon name="home" size={28} color={ui.color.white_light} />
       </TouchableOpacity>
       <TouchableOpacity style={styles.footerButton}>
-        <GradientMaskView style={{fontSize: 22, color: '#fff'}}>
+        <GradientMaskView style={{fontSize: 22, color: '#fff', opacity: 0}}>
           <MCIcon name="play-circle" size={38} />
         </GradientMaskView>
       </TouchableOpacity>
