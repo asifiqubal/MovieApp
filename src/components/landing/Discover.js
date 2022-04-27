@@ -21,6 +21,7 @@ import FAIcon from 'react-native-vector-icons/FontAwesome';
 import {GradientMaskView} from '../_common/Gradient';
 import {SearchMulti} from '../../redux/actions/Search';
 import {api} from '../../_config/api';
+import MaskedView from '@react-native-masked-view/masked-view';
 const {width} = Dimensions.get('screen');
 
 const Discover = props => {
@@ -115,6 +116,7 @@ const Discover = props => {
         onSelect={UpdateGenre}
         scrollX={scrollX}
       />
+
       <Animated.FlatList
         ref={movieRef}
         data={tabList}

@@ -22,6 +22,7 @@ import {
 } from '../_common/Gradient';
 import {ScrollView} from 'react-native-gesture-handler';
 import {MotiView} from 'moti';
+import {MaskedText} from '../_common/Masked';
 // import {ScrollView} from 'react-native-gesture-handler';
 
 const {width} = Dimensions.get('screen');
@@ -74,10 +75,9 @@ const GenreTabs = ({data, activeTab, onSelect, scrollX}) => {
         paddingVertical: 8,
         margin: 4,
       }}>
-      <TestTextMaskView text={'Hi'} />
-
       <ScrollView
         horizontal
+        // style={{backgroundColor: 'red'}}
         showsHorizontalScrollIndicator={false}
         ref={tabContainerRef}>
         {data.map((val, index) => {
@@ -87,8 +87,8 @@ const GenreTabs = ({data, activeTab, onSelect, scrollX}) => {
               item={val}
               ref={val.ref}
               isActive={index === activeTab}
+              // width={tabWidths[index].width}
               onPress={() => onSelect(index)}
-              tabWidths={tabWidths}
               scrollX={scrollX}
             />
           );
@@ -105,29 +105,48 @@ export default GenreTabs;
 
 const styles = StyleSheet.create({});
 
-const Tab = forwardRef(
-  ({item, isActive, onPress, tabWidths, scrollX}, tabRef) => {
-    return (
-      <View ref={tabRef} style={{padding: 4}}>
-        <View>
-          <MotiView
-            animate={{
-              backgroundColor: isActive ? 'rgba(0,0,0,0)' : '#fff',
-              opacity: isActive ? 0 : 1,
-            }}>
-            <TransparentText
+const Tab = forwardRef(({item, isActive, onPress, scrollX}, tabRef) => {
+  console.log(width);
+  const textRef = useRef();
+  return (
+    <TouchableOpacity
+      ref={tabRef}
+      style={{padding: 4, height: 34}}
+      onPress={onPress}>
+      <View style={{zIndex: 5, height: 34}}>
+        <MaskedText text={item?.name}>
+          <GradientView>
+            <MotiView
               style={{
-                fontSize: 20,
-                fontWeight: '600',
-              }}>
-              {item?.name}
-            </TransparentText>
-          </MotiView>
-        </View>
+                flex: 1,
+                backgroundColor: '#fff',
+              }}
+              animate={{
+                opacity: isActive ? 0 : 1,
+              }}
+              transition={{
+                type: 'spring',
+                duration: 500,
+                delay: 0,
+              }}
+            />
+          </GradientView>
+        </MaskedText>
       </View>
-    );
-  },
-);
+      <Text
+        style={{
+          zIndex: 1,
+          fontSize: 18,
+          fontWeight: '600',
+          color: 'transparent',
+          // backgroundColor: 'transparent',
+          // position: 'absolute',
+        }}>
+        {item?.name}
+      </Text>
+    </TouchableOpacity>
+  );
+});
 
 const Indicator = ({tabWidths, scrollX}) => {
   console.log(tabWidths);
@@ -140,7 +159,7 @@ const Indicator = ({tabWidths, scrollX}) => {
     inputRange,
     outputRange: tabWidths.map(data => data.x),
   });
-  console.log(translateX, indicatorWidth);
+  console.log('translateX', translateX);
   return (
     <Animated.View
       style={{
