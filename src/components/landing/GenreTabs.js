@@ -159,7 +159,7 @@ const Indicator = ({tabWidths, scrollX}) => {
     inputRange,
     outputRange: tabWidths.map(data => data.x),
   });
-  console.log('translateX', translateX);
+  // console.log('translateX', translateX);
   return (
     <Animated.View
       style={{
