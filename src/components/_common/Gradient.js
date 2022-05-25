@@ -45,7 +45,18 @@ export const GradientMaskView = props => {
         colors={['#FF5F6D', '#FFC371']}
         start={{x: 0, y: 1}}
         end={{x: 1, y: 1}}>
-        <View {...props} style={[{opacity: 0}, props.style]}></View>
+        <View
+          {...props}
+          style={[
+            {
+              opacity: 0,
+              flex: 1,
+              justifyContent: 'center',
+              alignItems: 'center',
+            },
+            props.style,
+          ]}
+        />
       </LinearGradient>
     </MaskedView>
   );

@@ -16,3 +16,16 @@ export const MaskedText = ({children, text, textStyle}) => {
     </MaskedView>
   );
 };
+
+export const MaskedIcon = ({children, iconStyle}) => {
+  return (
+    <MaskedView
+      maskElement={
+        <View style={[iconStyle, {flex: 1, width: '100%', height: '100%'}]}>
+          {children}
+        </View>
+      }>
+      <GradientView />
+    </MaskedView>
+  );
+};

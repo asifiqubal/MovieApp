@@ -22,6 +22,7 @@ import {GradientMaskView} from '../_common/Gradient';
 import {SearchMulti} from '../../redux/actions/Search';
 import {api} from '../../_config/api';
 import MaskedView from '@react-native-masked-view/masked-view';
+import {MaskedIcon} from '../_common/Masked';
 const {width} = Dimensions.get('screen');
 
 const Discover = props => {
@@ -209,10 +210,15 @@ const Footer = () => {
       <TouchableOpacity style={styles.footerButton}>
         <MCIcon name="home" size={28} color={ui.color.white_light} />
       </TouchableOpacity>
-      <TouchableOpacity style={styles.footerButton}>
-        <GradientMaskView style={{fontSize: 22, color: '#fff', opacity: 0}}>
+      <TouchableOpacity style={[styles.footerButton, {backgroundColor: 'red'}]}>
+        {/* <MCIcon name="play-circle" size={38} /> */}
+        <MaskedIcon>
           <MCIcon name="play-circle" size={38} />
-        </GradientMaskView>
+        </MaskedIcon>
+        {/* <GradientMaskView
+          style={{opacity: 1, alignSelf: 'center', backgroundColor: 'red'}}>
+          <MCIcon name="play-circle" size={38} />
+        </GradientMaskView> */}
       </TouchableOpacity>
       <TouchableOpacity style={styles.footerButton}>
         <FAIcon name="user" size={28} color={ui.color.white_light} />
